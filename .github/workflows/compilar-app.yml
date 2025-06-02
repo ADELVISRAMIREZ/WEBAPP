@@ -1,8 +1,16 @@
 name: Compilar Aplicación Android
 
-on:
-  repository_dispatch:
-    types: [solicitud-compilacion]
+on: 
+  workflow_dispatch:   # ¡Este es el cambio clave!
+    inputs:
+      nombre_app:
+        description: 'Nombre de la aplicación'
+        required: true
+        default: 'MiAppTest'
+      id_app:
+        description: 'ID de la aplicación (ej: com.mi.app)'
+        required: true
+        default: 'com.test.app'
 
 jobs:
   compilar:
@@ -21,7 +29,7 @@ jobs:
       - name: Instalar herramientas
         run: |
           npm install -g @capacitor/cli
-          npx cap init --app-name "${{ github.event.client_payload.nombre_app }}" --app-id "${{ github.event.client_payload.id_app }}"
+          npx cap init --app-name "${{ inputs.nombre_app }}" --app-id "${{ inputs.id_app }}"
           npx cap add android
       
       - name: Crear Android App Bundle
